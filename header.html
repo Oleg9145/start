@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+</head>
+
+<body>
+    <h1>Калькулятор зарплати</h1>
+    <form id="salaryCalculator">
+        <label for="totalBoxes">Загальна кількість ящиків:</label>
+        <input type="number" id="totalBoxes" name="totalBoxes" required><br>
+
+        <label for="hoursSpent">Загальна кількість годин:</label>
+        <input type="number" id="hoursSpent" name="hoursSpent" required><br>
+
+        <label for="normalRate">Норма (ящиків на годину):</label>
+        <input type="number" id="normalRate" name="normalRate" required><br>
+
+        <label for="workedHours">Відпрацьовані години:</label>
+        <input type="number" id="workedHours" name="workedHours" required><br>
+
+        <button type="button" id="calculateButton">Розрахувати</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', function () {
+            const totalBoxes = parseFloat(document.getElementById('totalBoxes').value);
+            const hoursSpent = parseFloat(document.getElementById('hoursSpent').value);
+            const normalRate = parseFloat(document.getElementById('normalRate').value);
+            const workedHours = parseFloat(document.getElementById('workedHours').value);
+
+            const salaryPerHour = calculateTotalSalary(totalBoxes, hoursSpent, normalRate, workedHours);
+            document.getElementById('result').innerText = salaryPerHour;
+        });
+    </script>
+    <!-- Після секції з формою і результатами -->
+    <div>
+        <h2>Збережені записи:</h2>
+        <ul id="savedRecords"></ul>
+    </div>
+
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', function () {
+            const totalBoxes = parseFloat(document.getElementById('totalBoxes').value);
+            const hoursSpent = parseFloat(document.getElementById('hoursSpent').value);
+            const normalRate = parseFloat(document.getElementById('normalRate').value);
+            const workedHours = parseFloat(document.getElementById('workedHours').value);
+
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString();
+
+            const salaryPerHour = calculateTotalSalary(totalBoxes, hoursSpent, normalRate, workedHours);
+            const resultText = `Дата: ${formattedDate}\n${salaryPerHour}`;
+
+            // Збереження даних у локальне сховище
+            const savedData = JSON.parse(localStorage.getItem('salaryRecords')) || [];
+            savedData.push(resultText);
+            localStorage.setItem('salaryRecords', JSON.stringify(savedData));
+
+            document.getElementById('result').innerText = resultText;
+        });
+
+        // При завантаженні сторінки, виводьте збережені записи
+        window.addEventListener('load', function () {
+            const savedData = JSON.parse(localStorage.getItem('salaryRecords')) || [];
+            const savedRecordsList = document.getElementById('savedRecords');
+
+            savedData.forEach(function (record) {
+                const listItem = document.createElement('li');
+                listItem.textContent = record;
+                savedRecordsList.appendChild(listItem);
+            });
+        });
+    </script>
+
+    <script src="./mob-menu.js"></script>
+</body>
+
+</html>
